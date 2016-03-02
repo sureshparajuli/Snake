@@ -24,15 +24,29 @@ public class GameControls implements KeyListener{
 		
 		DrawSnakeGamePanel panel = (DrawSnakeGamePanel)ev.getComponent();
 
-		if (SnakeGame.getGameStage() == SnakeGame.BEFORE_GAME){
+		//go in here only none of the key pressed
+		if (SnakeGame.getGameStage() == SnakeGame.BEFORE_GAME
+				&& (ev.getKeyCode() != KeyEvent.VK_W
+					&& ev.getKeyCode() != KeyEvent.VK_M
+					&& ev.getKeyCode() != KeyEvent.VK_I
+					&& ev.getKeyCode() != KeyEvent.VK_D
+					&& ev.getKeyCode() != KeyEvent.VK_S
+					&& ev.getKeyCode() != KeyEvent.VK_L)){
 			//Start the game
 			SnakeGame.setGameStage(SnakeGame.DURING_GAME);
 			SnakeGame.newGame();
 			panel.repaint();
 			return;
 		}
-		
-		if (SnakeGame.getGameStage() == SnakeGame.GAME_OVER){
+
+		//go in here only none of the key pressed
+		if (SnakeGame.getGameStage() == SnakeGame.GAME_OVER
+				&& (ev.getKeyCode() != KeyEvent.VK_W
+				&& ev.getKeyCode() != KeyEvent.VK_M
+				&& ev.getKeyCode() != KeyEvent.VK_I
+				&& ev.getKeyCode() != KeyEvent.VK_D
+				&& ev.getKeyCode() != KeyEvent.VK_S
+				&& ev.getKeyCode() != KeyEvent.VK_L)){
 			snake.reset();
 			Score.resetScore();
 			
@@ -73,10 +87,87 @@ public class GameControls implements KeyListener{
 	@Override
 	public void keyTyped(KeyEvent ev) {
 		//keyTyped events are for user typing letters on the keyboard, anything that makes a character display on the screen
+		DrawSnakeGamePanel panel = (DrawSnakeGamePanel)ev.getComponent();
+
+		//quit the program
 		char keyPressed = ev.getKeyChar();
 		char q = 'q';
 		if( keyPressed == q){
 			System.exit(0);    //quit if user presses the q key.
+		}
+
+		//warp on and off toogle
+		char w = 'w';
+		if( keyPressed == w){
+			SnakeGame.setToggleWarpWall();//set warp on/off
+			panel.repaint();
+		}
+		//maze on or off toogle
+		char m = 'm';
+		if( keyPressed == m){
+			SnakeGame.setToggleMaze();//set maze on off
+			panel.repaint();
+		}
+		//decrease clock speed if d is pressed, which means longer time interval
+		char d = 'd';
+		if( keyPressed == d){
+			long clockSpeed = SnakeGame.getClockSpeed();
+			if(clockSpeed < 900)
+			{
+				SnakeGame.setClockSpeed(clockSpeed+100);//set clock timer change
+				if(SnakeGame.getGameStage() == SnakeGame.DURING_GAME) {//restart timer if during the game
+					SnakeGame.getGameClock().timer.purge();
+					SnakeGame.getGameClock().timer.cancel();
+					SnakeGame.getGameClock().cancel();
+					SnakeGame.newGame();
+				}
+				panel.repaint();
+			}
+		}
+
+		//increase clock speed if i is pressed, which means shorter time interval
+		char i = 'i';
+		if( keyPressed == i){
+			long clockSpeed = SnakeGame.getClockSpeed();
+			if(clockSpeed > 100)
+			{
+				SnakeGame.setClockSpeed(clockSpeed-100);
+				if(SnakeGame.getGameStage() == SnakeGame.DURING_GAME) {//restart timer if during the game
+					SnakeGame.getGameClock().timer.purge();
+					SnakeGame.getGameClock().timer.cancel();
+					SnakeGame.getGameClock().cancel();
+					SnakeGame.newGame();
+				}
+				panel.repaint();
+			}
+		}
+
+		//decrease screen size if s is pressed
+		char s = 's';
+		if( keyPressed == s){
+			if(SnakeGame.getxPixelMaxDimension() > SnakeGame.xPixelMaxDimension
+					&& SnakeGame.getyPixelMaxDimension() > SnakeGame.yPixelMaxDimension)
+			{
+				SnakeGame.setScreenSize(SnakeGame.getxPixelMaxDimension()-100, SnakeGame.getyPixelMaxDimension()-100);
+				snake.setMaxX(SnakeGame.getXSquares());
+				snake.setMaxY(SnakeGame.getYSquares());
+				snake.setSquareSize(SnakeGame.getSquareSize());
+				panel.repaint();
+			}
+		}
+
+		//increase screen size if l is pressed
+		char l = 'l';
+		if( keyPressed == l){
+			if(SnakeGame.getxPixelMaxDimension() < SnakeGame.xPixelMaxDimension+300
+					&& SnakeGame.getyPixelMaxDimension() < SnakeGame.yPixelMaxDimension+300)
+			{
+				SnakeGame.setScreenSize(SnakeGame.getxPixelMaxDimension()+100, SnakeGame.getyPixelMaxDimension()+100);
+				snake.setMaxX(SnakeGame.getXSquares());
+				snake.setMaxY(SnakeGame.getYSquares());
+				snake.setSquareSize(SnakeGame.getSquareSize());
+				panel.repaint();
+			}
 		}
 	}
 

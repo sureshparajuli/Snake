@@ -26,8 +26,10 @@ public class Kibble {
 		boolean kibbleInSnake = true;
 		while (kibbleInSnake == true) {
 			//Generate random kibble location
-			kibbleX = rng.nextInt(SnakeGame.xSquares);
-			kibbleY = rng.nextInt(SnakeGame.ySquares);
+			//kibbleX = rng.nextInt(SnakeGame.xSquares);
+			kibbleX = rng.nextInt(SnakeGame.getXSquares());
+			//kibbleY = rng.nextInt(SnakeGame.ySquares);
+			kibbleY = rng.nextInt(SnakeGame.getYSquares());
 			kibbleInSnake = s.isSnakeSegment(kibbleX, kibbleY);
 		}
 		

@@ -22,7 +22,13 @@ public class Score {
 	}
 	
 	public static void increaseScore() {
-		
+		//if the timer is faster than 500 millisecond then use the speed increment factor set score
+		//which means if the speed is greater than 5 then each eat will be scored higher
+		int speedIncrementFactor = SnakeGame.getSnakeSpeedFactor();
+		if(speedIncrementFactor > 5)
+		{
+			increment = speedIncrementFactor;
+		}
 		score = score + increment;
 		
 	}

@@ -28,8 +28,26 @@ public class Snake {
 
 	private int justAteMustGrowThisMuch = 0;
 
-	private int maxX, maxY, squareSize;  
+	private int maxX, maxY, squareSize;
+
+	//define set method for maxx maxy and squaresize
+	public void setMaxX(int maxX)
+	{
+		this.maxX = maxX;
+	}
+
+	public void setMaxY(int maxY)
+	{
+		this.maxY = maxY;
+	}
+
+	public void setSquareSize(int squareSize)
+	{
+		this.squareSize = squareSize;
+	}
 	private int snakeHeadX, snakeHeadY; //store coordinates of head - first segment
+
+	private int random;
 
 	public Snake(int maxX, int maxY, int squareSize){
 		this.maxX = maxX;
@@ -178,9 +196,30 @@ public class Snake {
 
 		//Does this make snake hit the wall?
 		if (snakeHeadX >= maxX || snakeHeadX < 0 || snakeHeadY >= maxY || snakeHeadY < 0 ) {
-			hitWall = true;	
-			SnakeGame.setGameStage(SnakeGame.GAME_OVER);
-			return;
+			if(SnakeGame.getWarpWall()) {
+				//top wall
+				if (snakeHeadY >= maxY){
+					snakeHeadY = 0;
+				}
+				//right side
+				if (snakeHeadX >= maxX){
+					snakeHeadX = 0;
+				}
+				//below wall
+				if (snakeHeadY < 0 ){
+					snakeHeadY = maxY - 1;
+				}
+				//left side wall
+				if (snakeHeadX < 0) {
+					snakeHeadX = maxX - 1;
+				}
+			}
+			else
+			{
+				hitWall = true;
+				SnakeGame.setGameStage(SnakeGame.GAME_OVER);
+				return;
+			}
 		}
 
 		//Does this make the snake eat its tail?
@@ -191,6 +230,92 @@ public class Snake {
 			SnakeGame.setGameStage(SnakeGame.GAME_OVER);
 			return;
 		}
+		//if the maze exists and snake hit the maze wall game ends
+		if (SnakeGame.getMaze())
+		{
+			//if wall is up and snake is going up
+			if (currentHeading == DIRECTION_UP)
+			{
+				if ((snakeHeadY < random && snakeHeadY + 1 >= random) && (snakeHeadX >= random && snakeHeadX < random*2))
+				{
+					hitWall = true;
+				}
+				if ((snakeHeadY < random*4 && snakeHeadY + 1 >= random*4) && (snakeHeadX >= random && snakeHeadX < random*2))
+				{
+					hitWall = true;
+				}
+				if ((snakeHeadY < random && snakeHeadY + 1 >= random) && (snakeHeadX >= random*3 && snakeHeadX < random*4))
+				{
+					hitWall = true;
+				}
+				if ((snakeHeadY < random*4 && snakeHeadY + 1 >= random*4) && (snakeHeadX >= random*3 && snakeHeadX < random*4))
+				{
+					hitWall = true;
+				}
+			}
+
+			//if snake is heaing down
+			if (currentHeading == DIRECTION_DOWN)
+			{
+				if ((snakeHeadY == random && snakeHeadY - 1 < random) && (snakeHeadX >= random && snakeHeadX < random*2))
+				{
+					hitWall = true;
+				}
+				if ((snakeHeadY == random*4 && snakeHeadY - 1 < random*4) && (snakeHeadX >= random*4 && snakeHeadX < random*2))
+				{
+					hitWall = true;
+				}
+				if ((snakeHeadY == random && snakeHeadY - 1 < random) && (snakeHeadX >= random*3 && snakeHeadX < random*4))
+				{
+					hitWall = true;
+				}
+				if ((snakeHeadY == random*4 && snakeHeadY - 1 < random*4) && (snakeHeadX >= random*3 && snakeHeadX < random*4))
+				{
+					hitWall = true;
+				}
+			}
+			//when snake is heading left
+			if (currentHeading == DIRECTION_LEFT)
+			{
+				if ((snakeHeadX < random && snakeHeadX + 1 >= random) && (snakeHeadY >= random && snakeHeadY < random))
+				{
+					hitWall = true;
+				}
+				if ((snakeHeadX < random && snakeHeadX + 1 >= random) && (snakeHeadY >= random*3 && snakeHeadY < random*4))
+				{
+					hitWall = true;
+				}
+				if ((snakeHeadX < random*4 && snakeHeadX + 1 >= random*4) && (snakeHeadY >= random && snakeHeadY < random*4))
+				{
+					hitWall = true;
+				}
+				if ((snakeHeadX < random*4 && snakeHeadX + 1 >= random*4) && (snakeHeadY >= random*3 && snakeHeadY < random*4))
+				{
+					hitWall = true;
+				}
+			}
+			//when snake is heading right
+			if (currentHeading == DIRECTION_RIGHT)
+			{
+				if ((snakeHeadX == 2 && snakeHeadX - 1 < 2) && (snakeHeadY >= 2 && snakeHeadY < 4))
+				{
+					hitWall = true;
+				}
+				if ((snakeHeadX == random && snakeHeadX - 1 < random) && (snakeHeadY >= random*3 && snakeHeadY < random*4))
+				{
+					hitWall = true;
+				}
+				if ((snakeHeadX == random*4 && snakeHeadX - 1 < random*4) && (snakeHeadY >= random*4 && snakeHeadY < random*4))
+				{
+					hitWall = true;
+				}
+				if ((snakeHeadX == random*4 && snakeHeadX - 1 < random*4) && (snakeHeadY >= random*3 && snakeHeadY < random*4))
+				{
+					hitWall = true;
+				}
+			}
+		}
+
 
 		//Otherwise, game is still on. Add new head
 		snakeSquares[snakeHeadX][snakeHeadY] = 1; 
@@ -288,6 +413,11 @@ public class Snake {
 			
 		}
 		return false;
+	}
+
+	public void setRandom(int random)
+	{
+		this.random = random;
 	}
 
 
